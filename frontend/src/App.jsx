@@ -33,7 +33,7 @@ const App = () => {
               path="/user/:id"
               element={isAuth ? <UserAccount user={user} /> : <Login />}
             />
-            <Route path="/register" element={<Register />} />
+            <Route path="/register" element={!isAuth ? <Register /> : <Home />}/>
             <Route path="/login" element={!isAuth ? <Login /> : <Home />} />
             <Route path="*" element={<NotFound />} />
             <Route path="/search" element={<Search />} />

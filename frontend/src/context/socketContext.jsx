@@ -2,7 +2,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
 import { UserData } from "./userContext";
 
-const Backend_URL = "http://localhost:5000";
+const Backend_URL = "https://mern-social-1yq2.onrender.com";
 
 const SocketContext =createContext();
 

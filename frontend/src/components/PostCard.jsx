@@ -11,6 +11,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 import { LoadingAnimation } from "./Loading";
 import { SocketData } from "../context/socketContext";
+import AIPopover from "./AIPopover";
 
 const PostCard = ({ type, post }) => {
   const [isLike, setIsLike] = useState(false);
@@ -240,13 +241,19 @@ const PostCard = ({ type, post }) => {
           )}
 
           {/* New Comment Input */}
-          <div className="flex items-center gap-3 mt-4">
+          <div className="flex items-center gap-3 mt-4 relative">
             <input
               type="text"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
               placeholder="Write a comment..."
               className="flex-1 px-4 py-2 border rounded-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300"
+              style={{ paddingLeft: 48 }}
+            />
+            <AIPopover
+              inputValue={comment}
+              setInputValue={setComment}
+              inputRef={{ current: document.querySelector('input[placeholder="Write a comment..."]') }}
             />
             <button
               onClick={addCommentHandler}

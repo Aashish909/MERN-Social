@@ -1,5 +1,5 @@
 import express from "express";
-import dotenv from "dotenv";
+
 import { connectDB } from "./database/db.js";
 
 import authRoutes from "./routes/authRoutes.js";
@@ -11,13 +11,25 @@ import messageRoutes from "./routes/messageRoutes.js";
 import { Chat } from "./models/chatModel.js";
 import { isAuth } from "./middleware/isAuth.js";
 import { app, server } from "./socket/socket.js";
+
+// Register AI routes
+import aiRoutes from "./routes/aiRoutes.js";
+
+// Get the directory of the current file (backend/)
+
+import dotenv from "dotenv";
 import path from "path";
+import { fileURLToPath } from "url";
 
+// Required for __dirname in ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
+// ✅ Load .env from backend folder
+dotenv.config({ path: path.join(__dirname, ".env") });
 
-const __dirname = path.resolve();
-
-dotenv.config();
+// ✅ Debug log
+// console.log("Gemini API Key:", process.env.GEMINI_API_KEY);
 
 // Configure Cloudinary
 cloudinary.v2.config({
@@ -67,6 +79,8 @@ app.use("/api/user", userRoutes);
 app.use("/api/post", postRoutes);
 app.use("/api/messages", messageRoutes);
 
+// Register AI routes
+app.use("/api/ai", aiRoutes);
 
 // Static frontend
 app.use(express.static(path.join(__dirname, "frontend", "dist")));

@@ -16,20 +16,8 @@ const MessageContainer = ({ selectedChat, setChats }) => {
 
   useEffect(()=>{
     socket.on('newMessage', (message)=>{
-      console.log(
-        "Socket received new message (in MessageContainer):",
-        message
-      );
       if (selectedChat._id === message.chatId) {
-        console.log("Adding message from socket to state.");
         setMessages((prevMessages) => [...prevMessages, message]);
-      } else {
-        console.log(
-          "Socket message not for current chat:",
-          message.chatId,
-          "Current chat:",
-          selectedChat._id
-        );
       }
        setChats((prev) => {
          const updatedChat = prev.map((chat) => {
@@ -47,7 +35,6 @@ const MessageContainer = ({ selectedChat, setChats }) => {
          return updatedChat;
        });
     })
-
     return ()=>{
       socket.off('newMessage')
     }
@@ -60,7 +47,6 @@ const MessageContainer = ({ selectedChat, setChats }) => {
         `/api/messages/${selectedChat.users[0]._id}`
       );
       setMessages(data.messages);
-      console.log("fetch messages:",data);
     } catch (error) {
       console.log(error);
     } finally {
@@ -81,42 +67,42 @@ const MessageContainer = ({ selectedChat, setChats }) => {
   },[messages])
 
   return (
-    <div className="flex flex-col h-full border-l border-gray-200 w-full">
+    <div className="flex flex-col h-full w-full bg-gradient-to-b from-blue-50 via-white to-white md:rounded-2xl shadow-lg overflow-hidden">
       {selectedChat && (
         <div className="flex flex-col h-full">
           {/* Chat Header */}
-          <div className="flex items-center gap-4 px-4 py-3 bg-gray-100 border-b border-gray-300">
+          <div className="flex items-center gap-4 px-4 py-3 bg-white/80 border-b border-gray-200 sticky top-0 z-10 shadow-sm backdrop-blur-md">
             <img
               src={selectedChat.users[0].profilePic.url}
               alt="User"
-              className="w-10 h-10 rounded-full object-cover"
+              className="w-10 h-10 rounded-full object-cover border border-gray-200"
             />
-            <span className="font-medium text-gray-800 text-lg">
+            <span className="font-semibold text-gray-900 text-lg">
               {selectedChat.users[0].name}
             </span>
           </div>
 
           {/* Chat Messages */}
-          <div ref={messageContainerRef} className="flex-1 overflow-y-auto px-4 py-3 bg-white space-y-2">
+          <div ref={messageContainerRef} className="flex-1 overflow-y-auto px-1 sm:px-4 py-3 bg-transparent space-y-2">
             {loading ? (
               <LoadingAnimation />
             ) : (
-              messages?.map((item) => {
-                console.log("Rendering message item:", item);
-                return (
-                  <Message
-                    key={
-                      item._id ||
-                      `${item.sender}-${item.timestamp || Math.random()}`
-                    }
-                    message={item}
-                    ownMessage={item.sender === user._id && true}
-                  />
-                );
-              })
+              messages?.map((item) => (
+                <Message
+                  key={
+                    item._id ||
+                    `${item.sender}-${item.timestamp || Math.random()}`
+                  }
+                  message={item}
+                  ownMessage={item.sender === user._id && true}
+                />
+              ))
             )}
           </div>
-          <MessageInput setMessages={setMessages} selectedChat={selectedChat} />
+          {/* Input always at the bottom */}
+          <div className="sticky bottom-0 z-20 bg-gradient-to-t from-white/90 via-white/80 to-transparent backdrop-blur-md">
+            <MessageInput setMessages={setMessages} selectedChat={selectedChat} />
+          </div>
         </div>
       )}
     </div>

@@ -3,6 +3,7 @@ import { PostData } from "../context/postContext";
 import { FiImage } from "react-icons/fi";
 import { UserData } from "../context/userContext";
 import { LoadingAnimation } from "./Loading";
+import AIPopover from "./AIPopover";
 
 const AddPost = ({ type }) => {
   const [caption, setCaption] = useState("");
@@ -46,13 +47,19 @@ const AddPost = ({ type }) => {
           </div>
 
           {/* Input Section */}
-          <div className="flex-1">
+          <div className="flex-1 relative">
             <textarea
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               rows="2"
               placeholder="What's on your mind?"
               className="w-full resize-none border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-400"
+              style={{ paddingLeft: 48 }}
+            />
+            <AIPopover
+              inputValue={caption}
+              setInputValue={setCaption}
+              inputRef={{ current: document.querySelector('textarea[placeholder="What\'s on your mind?"]') }}
             />
             {/* File preview */}
             {filePrev && (

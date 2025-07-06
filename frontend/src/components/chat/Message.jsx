@@ -6,23 +6,20 @@ const Message = ({ message, ownMessage }) => {
 
   return (
     <div
-      className={`w-full flex ${
-        ownMessage ? "justify-end" : "justify-start"
-      } my-2 px-2`}
+      className={`w-full flex ${ownMessage ? "justify-end" : "justify-start"} my-1 px-2`}
     >
       <div
-        className={`max-w-[80%] px-4 py-2 rounded-lg shadow-md
-          ${
-            ownMessage
-              ? "bg-blue-600 text-white rounded-br-none"
-              : "bg-gray-200 text-gray-800 rounded-bl-none"
-          }`}
+        className={`max-w-[80%] md:max-w-[60%] px-4 py-2 rounded-2xl shadow-sm transition-all
+          ${ownMessage
+            ? "bg-blue-500 text-white rounded-br-md rounded-tr-2xl rounded-tl-2xl"
+            : "bg-gray-100 text-gray-900 rounded-bl-md rounded-tl-2xl rounded-tr-2xl border border-gray-200"}
+        `}
+        style={{ wordBreak: "break-word" }}
       >
-        {/* Message text */}
-        <p className="break-words text-sm">{message.text}</p>
-
-        {/* Timestamp */}
-        <div className="text-[10px] text-right mt-1 opacity-80">{time}</div>
+        <span className="block text-base leading-snug whitespace-pre-line">{message.text}</span>
+        <div className={`flex justify-end mt-1 text-xs opacity-60 ${ownMessage ? "text-white" : "text-gray-500"}`}>
+          {time}
+        </div>
       </div>
     </div>
   );

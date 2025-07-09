@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { BsChat, BsThreeDotsVertical } from "react-icons/bs";
 import { IoHeartOutline, IoHeartSharp } from "react-icons/io5";
 import TimeAgo from "react-timeago";
@@ -71,6 +71,10 @@ const PostCard = ({ type, post }) => {
   }
 
   const { onlineUsers } = SocketData();
+
+  // Add sparkle button ref for comment input
+  const aiButtonRef = useRef(null);
+  const commentInputRef = useRef(null);
 
   return (
     <div className="bg-white shadow-md rounded-2xl p-5 mb-6 max-w-2xl mx-auto border border-gray-100 hover:shadow-xl transition-all duration-300 ease-in-out">
@@ -243,6 +247,7 @@ const PostCard = ({ type, post }) => {
           {/* New Comment Input */}
           <div className="flex items-center gap-3 mt-4 relative">
             <input
+              ref={commentInputRef}
               type="text"
               value={comment}
               onChange={(e) => setComment(e.target.value)}
@@ -250,11 +255,16 @@ const PostCard = ({ type, post }) => {
               className="flex-1 px-4 py-2 border rounded-full bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-300"
               style={{ paddingLeft: 48 }}
             />
-            <AIPopover
-              inputValue={comment}
-              setInputValue={setComment}
-              inputRef={{ current: document.querySelector('input[placeholder="Write a comment..."]') }}
-            />
+            {/* Sparkle Button (AI Popover Trigger) */}
+            <div className="absolute top-1 left-2 z-10" ref={aiButtonRef}>
+              <AIPopover
+                inputValue={comment}
+                setInputValue={setComment}
+                anchorRef={aiButtonRef}
+                inputRef={commentInputRef}
+                position="bottom"
+              />
+            </div>
             <button
               onClick={addCommentHandler}
               className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition"

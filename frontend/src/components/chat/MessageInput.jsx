@@ -16,6 +16,8 @@ const MessageInput = ({ setMessages, selectedChat }) => {
   const [aiPopoverOpen, setAiPopoverOpen] = useState(false);
   const aiPopoverRef = useRef(null);
   const inputRef = useRef(null);
+  // Add sparkle button ref for chat input
+  const aiButtonRef = useRef(null);
 
   // Close popover on outside click
   useEffect(() => {
@@ -82,28 +84,26 @@ const MessageInput = ({ setMessages, selectedChat }) => {
   return (
     <div className="w-full p-2 border-t bg-white dark:bg-gray-900 relative">
       <form onSubmit={handleMessage} className="flex items-center gap-2 relative">
-        {isAuth && (
-          <button
-            type="button"
-            className={`flex items-center gap-1 px-2 py-1 rounded-full bg-gray-50 hover:bg-blue-100 text-blue-600 font-semibold transition-colors duration-300 shadow-sm border border-gray-200 absolute left-2 top-1/2 -translate-y-1/2 z-20 ${aiPopoverOpen ? "ring-2 ring-blue-400" : ""}`}
-            onClick={() => setAiPopoverOpen((v) => !v)}
-            title="AI Tools"
-            tabIndex={0}
-            style={{ left: 8 }}
-          >
-            <FaStar className="text-base" />
-            <span className="text-sm font-medium">AI</span>
-          </button>
-        )}
-        <input
-          ref={inputRef}
-          type="text"
-          placeholder="Type a message"
-          value={textMessage}
-          onChange={(e) => setTextMessage(e.target.value)}
-          className="flex-1 p-2 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 pl-16"
-          required
-        />
+        <div className="relative flex-1 min-h-[48px]">
+          <input
+            ref={inputRef}
+            type="text"
+            placeholder="Type a message"
+            value={textMessage}
+            onChange={(e) => setTextMessage(e.target.value)}
+            className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 pl-12"
+            required
+          />
+          {isAuth && (
+            <AIPopover
+              inputValue={textMessage}
+              setInputValue={setTextMessage}
+              inputRef={inputRef}
+              className="absolute left-3 top-1/2 -translate-y-1/2 z-50"
+              position="top"
+            />
+          )}
+        </div>
         <button
           type="submit"
           className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-300"
@@ -115,6 +115,7 @@ const MessageInput = ({ setMessages, selectedChat }) => {
           <AIPopover
             inputValue={textMessage}
             setInputValue={setTextMessage}
+            anchorRef={aiButtonRef}
             inputRef={inputRef}
           />
         )}

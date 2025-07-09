@@ -26,7 +26,7 @@ export function PopoverTrigger({ children, open, setOpen }) {
   });
 }
 
-export function PopoverContent({ children, open, setOpen, className = "", style = {}, ...props }) {
+export function PopoverContent({ children, open, setOpen, className = "", style = {}, position = "bottom", ...props }) {
   const contentRef = useRef();
   // Close on Escape
   useEffect(() => {
@@ -62,8 +62,9 @@ export function PopoverContent({ children, open, setOpen, className = "", style 
         padding: 16,
         position: 'absolute',
         left: 0,
-        top: '100%',
-        marginTop: 8,
+        ...(position === 'top'
+          ? { bottom: '100%', top: 'auto', marginBottom: 8, marginTop: 0 }
+          : { top: '100%', marginTop: 8, marginBottom: 0 }),
         ...style
       }}
       tabIndex={-1}

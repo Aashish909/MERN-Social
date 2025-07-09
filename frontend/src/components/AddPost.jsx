@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { PostData } from "../context/postContext";
 import { FiImage } from "react-icons/fi";
 import { UserData } from "../context/userContext";
@@ -12,6 +12,8 @@ const AddPost = ({ type }) => {
 
   const { addPost, addLoading } = PostData();
   const { user } = UserData();
+
+  const captionInputRef = useRef(null);
 
   const changeFileHandler = (e) => {
     const selectedFile = e.target.files[0];
@@ -49,6 +51,7 @@ const AddPost = ({ type }) => {
           {/* Input Section */}
           <div className="flex-1 relative">
             <textarea
+              ref={captionInputRef}
               value={caption}
               onChange={(e) => setCaption(e.target.value)}
               rows="2"
@@ -56,11 +59,16 @@ const AddPost = ({ type }) => {
               className="w-full resize-none border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-1 focus:ring-blue-400"
               style={{ paddingLeft: 48 }}
             />
-            <AIPopover
-              inputValue={caption}
-              setInputValue={setCaption}
-              inputRef={{ current: document.querySelector('textarea[placeholder="What\'s on your mind?"]') }}
-            />
+            {/* Sparkle Button (AI Popover Trigger) */}
+            <div className="absolute top-2 left-2 z-10">
+              <AIPopover
+                inputValue={caption}
+                setInputValue={setCaption}
+                anchorRef={useRef(null)}
+                inputRef={captionInputRef}
+                position="bottom"
+              />
+            </div>
             {/* File preview */}
             {filePrev && (
               <div className="mt-3 rounded-lg overflow-hidden border border-gray-300">

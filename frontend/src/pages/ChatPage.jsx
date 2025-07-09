@@ -7,7 +7,6 @@ import { SocketData } from "../context/socketContext.jsx";
 
 const ChatPage = ({ user }) => {
   const {
-    user: loggedInUser,
     chats,
     setChats,
     selectedChat,
@@ -52,15 +51,15 @@ const ChatPage = ({ user }) => {
   }
 
   //chat
-  const { onlineUsers, socket } = SocketData();
+  const { onlineUsers } = SocketData();
 
   return (
-    <div className="flex flex-col md:flex-row h-screen md:h-[90vh] mt-0 md:mt-4 rounded-none md:rounded-lg border-0 md:border border-gray-200 shadow-none md:shadow-md overflow-hidden bg-gray-100">
+    <div className="flex flex-col md:flex-row h-screen min-h-screen md:h-[90vh] mt-0 md:mt-4 rounded-none md:rounded-lg border-0 md:border border-gray-200 shadow-none md:shadow-md overflow-hidden bg-gray-100">
       {/* Sidebar */}
       <div
         className={`w-full md:w-1/3 lg:w-1/4 border-r border-gray-300 bg-white p-4 space-y-4 ${
           selectedChat ? "hidden md:block" : "block"
-        }`}
+        } h-full md:h-auto flex-shrink-0`}
       >
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-xl font-bold text-gray-800">Chats</h2>
@@ -133,7 +132,7 @@ const ChatPage = ({ user }) => {
 
       {/* Message Container */}
       <div
-        className={`flex-1 bg-gray-50 ${
+        className={`flex-1 flex flex-col bg-gray-50 min-h-0 ${
           selectedChat ? "block" : "hidden md:block"
         }`}
       >
@@ -159,7 +158,7 @@ const ChatPage = ({ user }) => {
             </p>
           </div>
         ) : (
-          <MessageContainer selectedChat={selectedChat} setChats={setChats} />
+          <MessageContainer selectedChat={selectedChat} setChats={setChats} setSelectedChat={setSelectedChat} />
         )}
       </div>
     </div>

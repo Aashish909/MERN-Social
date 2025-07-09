@@ -17,7 +17,7 @@ const App = () => {
   const { loading, isAuth, user } = UserData();
 
   return (
-    <>
+    <div className="h-screen w-screen flex flex-col">
       {loading ? (
         <Loading />
       ) : (
@@ -45,7 +45,7 @@ const App = () => {
           {isAuth && <NavigationBar />}
         </BrowserRouter>
       )}
-    </>
+    </div>
   );
 };
 

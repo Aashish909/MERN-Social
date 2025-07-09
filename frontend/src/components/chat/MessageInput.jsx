@@ -7,7 +7,7 @@ import { BsSend } from "react-icons/bs";
 import { FaStar, FaMagic, FaRedo, FaCommentDots, FaGlobe } from "react-icons/fa";
 import AIPopover from "../AIPopover";
 
-const MessageInput = ({ setMessages, selectedChat }) => {
+const MessageInput = ({ setMessages, selectedChat, disabled }) => {
   const [textMessage, setTextMessage] = useState("");
   const { setChats } = ChatData();
   const { isAuth } = UserData();
@@ -82,17 +82,19 @@ const MessageInput = ({ setMessages, selectedChat }) => {
   };
 
   return (
-    <div className="w-full p-2 border-t bg-white dark:bg-gray-900 relative">
+    <div className="w-full p-2 border-t bg-white dark:bg-gray-900 sticky bottom-0 left-0 right-0 z-30" style={{paddingBottom: 'env(safe-area-inset-bottom, 0px)'}}>
       <form onSubmit={handleMessage} className="flex items-center gap-2 relative">
         <div className="relative flex-1 min-h-[48px]">
           <input
             ref={inputRef}
             type="text"
-            placeholder="Type a message"
+            placeholder={disabled ? "Select a chat to start messaging" : "Type a message"}
             value={textMessage}
             onChange={(e) => setTextMessage(e.target.value)}
-            className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 pl-12"
-            required
+            className="w-full max-w-full p-2 rounded-lg border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 pl-12"
+            required={!disabled}
+            style={{WebkitAppearance: 'none'}}
+            disabled={disabled}
           />
           {isAuth && (
             <AIPopover
@@ -106,7 +108,8 @@ const MessageInput = ({ setMessages, selectedChat }) => {
         </div>
         <button
           type="submit"
-          className="p-2 rounded-full bg-blue-500 hover:bg-blue-600 text-white transition-colors duration-300"
+          className={`p-2 rounded-full transition-colors duration-300 ${disabled ? 'bg-gray-300 text-gray-400 cursor-not-allowed' : 'bg-blue-500 hover:bg-blue-600 text-white'}`}
+          disabled={disabled}
         >
           <BsSend className="text-xl" />
         </button>

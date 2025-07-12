@@ -29,10 +29,17 @@ export const SocketContextProvider=({children})=>{
     useEffect(() => {
       if (!user?._id) return;
 
+      // Prevent multiple socket connections
+      if (socket) {
+        socket.disconnect();
+      }
+
       const socket = io(Backend_URL, {
         query: {
           userId: user._id,
         },
+        transports: ['websocket', 'polling'],
+        timeout: 20000,
       });
 
       setSocket(socket);
@@ -41,16 +48,20 @@ export const SocketContextProvider=({children})=>{
         setOnlineUsers(users);
       });
 
-      // 👇 Add this to listen to incoming messages
-      socket.on("newMessage", (message) => {
-        console.log("Received new message via socket:", message);
-        // Optionally dispatch to global state, context, or update UI directly
+      socket.on("connect", () => {
+        console.log("Socket connected");
+      });
+
+      socket.on("disconnect", () => {
+        console.log("Socket disconnected");
       });
 
       return () => {
-        socket.disconnect();
+        if (socket) {
+          socket.disconnect();
+        }
       };
-    }, [user?._id]);
+    }, [user?._id, socket]);
 
 
     return <SocketContext.Provider value={{socket, onlineUsers}}>{children}</SocketContext.Provider>;

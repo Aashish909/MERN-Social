@@ -9,18 +9,35 @@ export const PostContextProvider =({children})=>{
     const [posts, setPosts] = useState([]);
     const [reels, setReels] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+    const [lastCallTime, setLastCallTime] = useState(0);
 
     async function getAllPosts() {
-            try {
-                const {data} =await axios.get("/api/post/all")
+        // Prevent excessive calls - only allow one call per 2 seconds
+        const now = Date.now();
+        if (now - lastCallTime < 2000) {
+          return;
+        }
+        
+        if (isLoading) {
+          return;
+        }
 
-                setPosts(data.posts);
-                setReels(data.reels);
-                setLoading(false);
-            } catch (error) {
-                console.log(error);
-                setLoading(false);
-            }
+        setIsLoading(true);
+        setLastCallTime(now);
+
+        try {
+            const {data} =await axios.get("/api/post/all")
+
+            setPosts(data.posts);
+            setReels(data.reels);
+            setLoading(false);
+        } catch (error) {
+            console.log(error);
+            setLoading(false);
+        } finally {
+            setIsLoading(false);
+        }
     }   
 
     async function likePost(id) {
